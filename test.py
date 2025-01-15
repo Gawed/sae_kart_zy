@@ -3,10 +3,11 @@
 
 # Instructions:
 # Change Serial port on line 17 and run with python3+. Dumps register 0x83 (total pack voltage) to verify BMS communication.
-
+from time import sleep
 import time
 import sys, os, io
 import struct
+import paho.mqtt.client as mqtt
 
 # Plain serial... Modbus would have been nice, but oh well. 
 import serial
@@ -14,7 +15,7 @@ import serial
 sleepTime = 10
 
 try:
-    bms = serial.Serial('/dev/ttyUSB1')
+    bms = serial.Serial('/dev/ttyUSB0')
     bms.baudrate = 115200
     bms.timeout  = 0.2
 except:
