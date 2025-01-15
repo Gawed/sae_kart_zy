@@ -61,7 +61,7 @@ def byteArrayToHEX(byte_array):
 
 # See https://diysolarforum.com/resources/jk-bms-documentation-on-protocols-provided-by-hankzor.259/ for protocol specification documents   
 def main():
-    cmd = bytearray.fromhex('4E 57 00 13 00 00 00 00 03 03 00 83 00 00 00 00 68')
+    cmd = bytearray.fromhex('4E 57 00 13 00 00 00 00 03 03 00 85 00 00 00 00 68')
     crc = sum(cmd) #crc is misleading, they really just use the sum of the data so far. 
     cmd += bytearray.fromhex(f'{crc:08x}') #Crazy syntax but this formats the crc decimal value to an 8 character, zero-padded hexadecimal number and then appends it to the original cmd
     output = readBMS(cmd)
@@ -72,14 +72,30 @@ def main():
     result = rawdata[12:(13 + (length-20))] #The returned data starts at pos 12 (byte 13) and varies in size depending on register
     message = str(int.form_bytes(result,'big'))
     client.publish(topic,message)
+    broker = "192.168.1.88"
+    port = 1883
+    topic = "bms/baterie"
+    client = mqtt.Client()
+    client.username_pw_set("mqtt_mat","user")
+    client.connect(broker,port,60)
 
-broker = "192.168.1.88"
-port = 1883
-topic = "bms/baterie"
-
-client = mqtt.Client()
-client.username_pw_set("mqtt_mat","user")
-client.connect(broker,port,60)
+    cmd = bytearray.fromhex('4E 57 00 13 00 00 00 00 03 03 00 82 00 00 00 00 68')
+    crc = sum(cmd) #crc is misleading, they really just use the sum of the data so far. 
+    cmd += bytearray.fromhex(f'{crc:08x}') #Crazy syntax but this formats the crc decimal value to an 8 character, zero-padded hexadecimal number and then appends it to the original cmd
+    output = readBMS(cmd)
+    #First find the length bytes
+    rawdata = bytearray.fromhex(output)
+    length = int.from_bytes(rawdata[2:4], 'big')
+    #20 Bytes would be a 1 byte data response. Increase output for bigger 
+    result = rawdata[12:(13 + (length-20))] #The returned data starts at pos 12 (byte 13) and varies in size depending on register
+    message = str(int.form_bytes(result,'big'))
+    client.publish(topic,message)
+    broker = "192.168.1.88"
+    port = 1883
+    topic = "bms/temperature"
+    client = mqtt.Client()
+    client.username_pw_set("mqtt_mat","user")
+    client.connect(broker,port,60)
 
 if __name__ == "__main__" : 
     try : 
@@ -88,21 +104,3 @@ if __name__ == "__main__" :
                     sleep(10)
     except Exception as e : 
             print(e)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-quit()
