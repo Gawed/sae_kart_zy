@@ -82,6 +82,71 @@ def main():
     topic = "bms/baterie"
     client.publish(topic,message)
 
+    cmd = bytearray.fromhex('4E 57 00 13 00 00 00 00 03 03 00 79 00 00 00 00 68')
+    crc = sum(cmd) #crc is misleading, they really just use the sum of the data so far. 
+    cmd += bytearray.fromhex(f'{crc:08x}') #Crazy syntax but this formats the crc decimal value to an 8 character, zero-padded hexadecimal number and then appends it to the original cmd
+    output = readBMS(cmd)
+    #First find the length bytes
+    rawdata = bytearray.fromhex(output)
+    length = int.from_bytes(rawdata[2:4], 'big')
+    #20 Bytes would be a 1 byte data response. Increase output for bigger 
+    result = rawdata[12:(13 + (length-20))] #The returned data starts at pos 12 (byte 13) and varies in size depending on register
+    message = str(int.from_bytes(result,'big'))
+    topic = "bms/single"
+    client.publish(topic,single)
+
+    cmd = bytearray.fromhex('4E 57 00 13 00 00 00 00 03 03 00 89 00 00 00 00 68')
+    crc = sum(cmd) #crc is misleading, they really just use the sum of the data so far. 
+    cmd += bytearray.fromhex(f'{crc:08x}') #Crazy syntax but this formats the crc decimal value to an 8 character, zero-padded hexadecimal number and then appends it to the original cmd
+    output = readBMS(cmd)
+    #First find the length bytes
+    rawdata = bytearray.fromhex(output)
+    length = int.from_bytes(rawdata[2:4], 'big')
+    #20 Bytes would be a 1 byte data response. Increase output for bigger 
+    result = rawdata[12:(13 + (length-20))] #The returned data starts at pos 12 (byte 13) and varies in size depending on register
+    message = str(int.from_bytes(result,'big'))
+    topic = "bms/capacity"
+    client.publish(topic,single)    
+
+    cmd = bytearray.fromhex('4E 57 00 13 00 00 00 00 03 03 00 87 00 00 00 00 68')
+    crc = sum(cmd) #crc is misleading, they really just use the sum of the data so far. 
+    cmd += bytearray.fromhex(f'{crc:08x}') #Crazy syntax but this formats the crc decimal value to an 8 character, zero-padded hexadecimal number and then appends it to the original cmd
+    output = readBMS(cmd)
+    #First find the length bytes
+    rawdata = bytearray.fromhex(output)
+    length = int.from_bytes(rawdata[2:4], 'big')
+    #20 Bytes would be a 1 byte data response. Increase output for bigger 
+    result = rawdata[12:(13 + (length-20))] #The returned data starts at pos 12 (byte 13) and varies in size depending on register
+    message = str(int.from_bytes(result,'big'))
+    topic = "bms/time"
+    client.publish(topic,single)
+
+    cmd = bytearray.fromhex('4E 57 00 13 00 00 00 00 03 03 00 81 00 00 00 00 68')
+    crc = sum(cmd) #crc is misleading, they really just use the sum of the data so far. 
+    cmd += bytearray.fromhex(f'{crc:08x}') #Crazy syntax but this formats the crc decimal value to an 8 character, zero-padded hexadecimal number and then appends it to the original cmd
+    output = readBMS(cmd)
+    #First find the length bytes
+    rawdata = bytearray.fromhex(output)
+    length = int.from_bytes(rawdata[2:4], 'big')
+    #20 Bytes would be a 1 byte data response. Increase output for bigger 
+    result = rawdata[12:(13 + (length-20))] #The returned data starts at pos 12 (byte 13) and varies in size depending on register
+    message = str(int.from_bytes(result,'big'))
+    topic = "bms/box"
+    client.publish(topic,single)
+
+    cmd = bytearray.fromhex('4E 57 00 13 00 00 00 00 03 03 00 80 00 00 00 00 68')
+    crc = sum(cmd) #crc is misleading, they really just use the sum of the data so far. 
+    cmd += bytearray.fromhex(f'{crc:08x}') #Crazy syntax but this formats the crc decimal value to an 8 character, zero-padded hexadecimal number and then appends it to the original cmd
+    output = readBMS(cmd)
+    #First find the length bytes
+    rawdata = bytearray.fromhex(output)
+    length = int.from_bytes(rawdata[2:4], 'big')
+    #20 Bytes would be a 1 byte data response. Increase output for bigger 
+    result = rawdata[12:(13 + (length-20))] #The returned data starts at pos 12 (byte 13) and varies in size depending on register
+    message = str(int.from_bytes(result,'big'))
+    topic = "bms/tube"
+    client.publish(topic,single)    
+
     cmd = bytearray.fromhex('4E 57 00 13 00 00 00 00 03 03 00 82 00 00 00 00 68')
     crc = sum(cmd) #crc is misleading, they really just use the sum of the data so far. 
     cmd += bytearray.fromhex(f'{crc:08x}') #Crazy syntax but this formats the crc decimal value to an 8 character, zero-padded hexadecimal number and then appends it to the original cmd
@@ -94,8 +159,6 @@ def main():
     message = str(int.from_bytes(result,'big'))
     topic = "bms/temperature"
     client.publish(topic,message)    
-
-
 
     cmd = bytearray.fromhex('4E 57 00 13 00 00 00 00 03 03 00 83 00 00 00 00 68')
     crc = sum(cmd) #crc is misleading, they really just use the sum of the data so far. 
