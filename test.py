@@ -93,7 +93,7 @@ def main():
     result = rawdata[12:(13 + (length-20))] #The returned data starts at pos 12 (byte 13) and varies in size depending on register
     message = str(int.from_bytes(result,'big'))
     topic = "bms/single"
-    client.publish(topic,single)
+    client.publish(topic,message)
 
     cmd = bytearray.fromhex('4E 57 00 13 00 00 00 00 03 03 00 89 00 00 00 00 68')
     crc = sum(cmd) #crc is misleading, they really just use the sum of the data so far. 
@@ -106,7 +106,7 @@ def main():
     result = rawdata[12:(13 + (length-20))] #The returned data starts at pos 12 (byte 13) and varies in size depending on register
     message = str(int.from_bytes(result,'big'))
     topic = "bms/capacity"
-    client.publish(topic,single)    
+    client.publish(topic,message)    
 
     cmd = bytearray.fromhex('4E 57 00 13 00 00 00 00 03 03 00 87 00 00 00 00 68')
     crc = sum(cmd) #crc is misleading, they really just use the sum of the data so far. 
@@ -119,7 +119,7 @@ def main():
     result = rawdata[12:(13 + (length-20))] #The returned data starts at pos 12 (byte 13) and varies in size depending on register
     message = str(int.from_bytes(result,'big'))
     topic = "bms/time"
-    client.publish(topic,single)
+    client.publish(topic,message)
 
     cmd = bytearray.fromhex('4E 57 00 13 00 00 00 00 03 03 00 81 00 00 00 00 68')
     crc = sum(cmd) #crc is misleading, they really just use the sum of the data so far. 
@@ -132,7 +132,7 @@ def main():
     result = rawdata[12:(13 + (length-20))] #The returned data starts at pos 12 (byte 13) and varies in size depending on register
     message = str(int.from_bytes(result,'big'))
     topic = "bms/box"
-    client.publish(topic,single)
+    client.publish(topic,message)
 
     cmd = bytearray.fromhex('4E 57 00 13 00 00 00 00 03 03 00 80 00 00 00 00 68')
     crc = sum(cmd) #crc is misleading, they really just use the sum of the data so far. 
@@ -145,7 +145,7 @@ def main():
     result = rawdata[12:(13 + (length-20))] #The returned data starts at pos 12 (byte 13) and varies in size depending on register
     message = str(int.from_bytes(result,'big'))
     topic = "bms/tube"
-    client.publish(topic,single)    
+    client.publish(topic,message)    
 
     cmd = bytearray.fromhex('4E 57 00 13 00 00 00 00 03 03 00 82 00 00 00 00 68')
     crc = sum(cmd) #crc is misleading, they really just use the sum of the data so far. 
