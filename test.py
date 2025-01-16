@@ -79,7 +79,7 @@ def main():
     #20 Bytes would be a 1 byte data response. Increase output for bigger 
     result = rawdata[12:(13 + (length-20))] #The returned data starts at pos 12 (byte 13) and varies in size depending on register
     message = str(int.from_bytes(result,'big'))
-    topic = "bms/baterie"
+    topic = "bms/batterie"
     client.publish(topic,message)
 
     cmd = bytearray.fromhex('4E 57 00 13 00 00 00 00 03 03 00 79 00 00 00 00 68')
