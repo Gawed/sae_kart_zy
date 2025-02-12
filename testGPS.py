@@ -27,4 +27,4 @@ if __name__ == "__main__":
     try:
         get_gps_data()
     except KeyboardInterrupt:
-        print("程序已终止")
+        print("fini")
