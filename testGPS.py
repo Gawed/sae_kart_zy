@@ -2,9 +2,8 @@ import serial
 from micropyGPS import MicropyGPS
 import time
 
-gps = MicropyGPS(1, 'dd')  # 法国时区 UTC+1
+gps = MicropyGPS(1, 'dd')  
 
-# 使用 UART2 的设备
 serial_port = serial.Serial('/dev/ttyAMA1', 4800, timeout=1)
 
 def get_gps_data():
