@@ -1,30 +1,56 @@
 import serial
-from micropyGPS import MicropyGPS
-import time
 
-gps = MicropyGPS(1, 'dd')  
+def parse_gpgga(data):
+    """解析 GPGGA 语句，提取经纬度"""
+    parts = data.split(',')
+    if len(parts) > 5:
+        lat = convert_to_degrees(parts[2])  # 纬度
+        lat_dir = parts[3]  # N/S
+        lon = convert_to_degrees(parts[4])  # 经度
+        lon_dir = parts[5]  # E/W
+        
+        if lat and lon:
+            lat = -lat if lat_dir == 'S' else lat
+            lon = -lon if lon_dir == 'W' else lon
+            return lat, lon
+    return None, None
 
-serial_port = serial.Serial('/dev/ttyAMA1', 4800, timeout=1)
+def parse_gpgll(data):
+    """解析 GPGLL 语句，提取经纬度"""
+    parts = data.split(',')
+    if len(parts) > 5:
+        lat = convert_to_degrees(parts[1])  # 纬度
+        lat_dir = parts[2]  # N/S
+        lon = convert_to_degrees(parts[3])  # 经度
+        lon_dir = parts[4]  # E/W
+        
+        if lat and lon:
+            lat = -lat if lat_dir == 'S' else lat
+            lon = -lon if lon_dir == 'W' else lon
+            return lat, lon
+    return None, None
 
-def get_gps_data():
-    while True:
-        data = serial_port.readline().decode('ascii', errors='replace').strip()
-        if data.startswith('$'):
-            for char in data:
-                gps.update(char)
-
-        if gps.valid:
-            print(f"Latitude: {gps.latitude[0]:.5f} {gps.latitude[1]}")
-            print(f"Longitude: {gps.longitude[0]:.5f} {gps.longitude[1]}")
-            print(f"Altitude: {gps.altitude} meters")
-            print(f"Speed: {gps.speed[2]} km/h")
-            print(f"Date: {gps.date_string('long')}")
-            print(f"Time: {gps.time_string()}")
-            print()
-        time.sleep(1)
-
-if __name__ == "__main__":
+def convert_to_degrees(raw_value):
+    """将 NMEA 坐标转换为十进制度"""
+    if not raw_value:
+        return None
     try:
-        get_gps_data()
-    except KeyboardInterrupt:
-        print("fini")
+        d = int(float(raw_value) / 100)
+        m = float(raw_value) - d * 100
+        return d + (m / 60)
+    except ValueError:
+        return None
+
+# 打开 GPS 串口
+ser = serial.Serial('/dev/serial0', baudrate=4800, timeout=1)
+
+while True:
+    line = ser.readline().decode('utf-8', errors='ignore').strip()
+    if line.startswith("$GPGGA"):
+        lat, lon = parse_gpgga(line)
+        if lat and lon:
+            print(f"GPGGA 经纬度: {lat}, {lon}")
+    elif line.startswith("$GPGLL"):
+        lat, lon = parse_gpgll(line)
+        if lat and lon:
+            print(f"GPGLL 经纬度: {lat}, {lon}")
