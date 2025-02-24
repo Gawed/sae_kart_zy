@@ -1,0 +1,7 @@
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
+
+# 读取并显示图像
+img = mpimg.imread('map.png')
+imgplot = plt.imshow(img)
+plt.show()
