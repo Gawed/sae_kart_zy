@@ -52,9 +52,9 @@ if __name__ == "__main__":
     API_KEY = "AIzaSyDLvUcraTLttRBcvn728IaGCe_prAZK24Q"  # 替换为你的API密钥
     
     try:
-        print("等待GPS定位...")
+        print("-------GPS---------...")
         latitude, longitude = get_gps_coordinates()
-        print(f"坐标获取成功！纬度: {latitude}, 经度: {longitude}")
+        print(f"Coordonnées obtenues avec succès ! LAT: {latitude}, LON: {longitude}")
         
         map_file = get_google_map(latitude, longitude, API_KEY)
         
