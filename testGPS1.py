@@ -18,30 +18,13 @@ def get_gps_coordinates():
         time.sleep(0.5)
 
 def convert_coordinates(coord, direction):
-    """
-    修正 GPS 坐标格式转换：
-    - 纬度 (lat) 格式: DDMM.MMMM
-    - 经度 (lon) 格式: DDDMM.MMMM
-    """
-    if not coord or coord == '':
-        return None
-    
-    # 判断是纬度还是经度
-    if len(coord) > 5:  # 纬度是 DDMM.MMMM，经度是 DDDMM.MMMM
-        deg_len = 2 if direction in ['N', 'S'] else 3  # 纬度前两位是度，经度前三位是度
-        deg = float(coord[:deg_len])
-        minutes = float(coord[deg_len:])
-    else:
-        return None  # 解析错误，返回 None
-
-    # 计算十进制格式
-    decimal = deg + (minutes / 60)
-
-    # 南纬（S）或西经（W）需要取负数
+    # 将DDMM.MMMM格式转换为十进制
+    deg = float(coord[:2]) if len(coord) > 5 else float(coord[:3])
+    minutes = float(coord[2 if len(coord)<=5 else 3:])
+    decimal = deg + minutes/60
     if direction in ['S', 'W']:
         decimal *= -1
-
-    return round(decimal, 8)  # 保留8位小数，提高精度
+    return round(decimal, 6)
 
 def get_google_map(lat, lon, api_key):
     url = f"https://maps.googleapis.com/maps/api/staticmap?center={lat},{lon}&zoom=15&size=600x400&maptype=roadmap&markers=color:red%7C{lat},{lon}&key={api_key}"
@@ -51,7 +34,7 @@ def get_google_map(lat, lon, api_key):
     return 'map.png'
 
 if __name__ == "__main__":
-    API_KEY = "AIzaSyDLvUcraTLttRBcvn728IaGCe_prAZK24Q"  # 替换为你的API密钥
+    API_KEY = "YOUR_GOOGLE_MAPS_API_KEY"  # 替换为你的API密钥
     
     try:
         print("等待GPS定位...")
