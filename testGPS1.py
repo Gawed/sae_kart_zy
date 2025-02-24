@@ -10,21 +10,36 @@ def get_gps_coordinates():
     while True:
         line = ser.readline().decode('utf-8', errors='ignore')
         if line.startswith('$GPGGA'):
-            data = line.split(',')
-            if data[6] != '0':  # 检查定位状态
-                lat = convert_coordinates(data[2], data[3])  # 纬度
-                lon = convert_coordinates(data[4], data[5]) # 经度
+            lat, lon = parse_gpgga(line)  # 使用新的解析函数
+            if lat and lon:
                 return lat, lon
         time.sleep(0.5)
 
-def convert_coordinates(coord, direction):
-    # 将DDMM.MMMM格式转换为十进制
-    deg = float(coord[:2]) if len(coord) > 5 else float(coord[:3])
-    minutes = float(coord[2 if len(coord)<=5 else 3:])
-    decimal = deg + minutes/60
-    if direction in ['S', 'W']:
-        decimal *= -1
-    return round(decimal, 6)
+def parse_gpgga(data):
+    """解析 GPGGA 语句，提取经纬度"""
+    parts = data.split(',')
+    if len(parts) > 5:
+        lat = convert_to_degrees(parts[2])  # 纬度
+        lat_dir = parts[3]  # N/S
+        lon = convert_to_degrees(parts[4])  # 经度
+        lon_dir = parts[5]  # E/W
+        
+        if lat and lon:
+            lat = -lat if lat_dir == 'S' else lat
+            lon = -lon if lon_dir == 'W' else lon
+            return lat, lon
+    return None, None
+
+def convert_to_degrees(raw_value):
+    """将 NMEA 坐标转换为十进制度"""
+    if not raw_value:
+        return None
+    try:
+        d = int(float(raw_value) / 100)
+        m = float(raw_value) - d * 100
+        return d + (m / 60)
+    except ValueError:
+        return None
 
 def get_google_map(lat, lon, api_key):
     url = f"https://maps.googleapis.com/maps/api/staticmap?center={lat},{lon}&zoom=15&size=600x400&maptype=roadmap&markers=color:red%7C{lat},{lon}&key={api_key}"
