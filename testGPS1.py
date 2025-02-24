@@ -34,7 +34,7 @@ def get_google_map(lat, lon, api_key):
     return 'map.png'
 
 if __name__ == "__main__":
-    API_KEY = "YOUR_GOOGLE_MAPS_API_KEY"  # 替换为你的API密钥
+    API_KEY = "AIzaSyDLvUcraTLttRBcvn728IaGCe_prAZK24Q"  # 替换为你的API密钥
     
     try:
         print("等待GPS定位...")
