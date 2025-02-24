@@ -53,13 +53,19 @@ if __name__ == "__main__":
     
     try:
         print("-------GPS---------")
-        latitude, longitude = get_gps_coordinates()
-        print(f"Coordonnées obtenues avec succès ! LAT: {latitude}, LON: {longitude}")
-        
-        map_file = get_google_map(latitude, longitude, API_KEY)
-        
-        # show image
-        img = Image.open(map_file)
+
+    	while True:
+        	latitude, longitude = get_gps_coordinates()
+        	print(f"Coordonnées obtenues avec succès !LAT: {latitude}, LON: {longitude}")
+
+        	
+        	map_file = get_google_map(latitude, longitude, API_KEY)
+        	print("地图已更新！")
+
+        	img = Image.open(map_file)
+        	img.show()
+            
+        	time.sleep(3)
         
     except Exception as e:
         print(f"error: {str(e)}")
