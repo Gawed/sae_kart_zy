@@ -60,7 +60,7 @@ if __name__ == "__main__":
 
         	
         	map_file = get_google_map(latitude, longitude, API_KEY)
-        	print("地图已更新！")
+        	print("map change！")
 
         	img = Image.open(map_file)
         	img.show()
