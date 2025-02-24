@@ -6,7 +6,7 @@ import serial
 
 def get_gps_coordinates():
     # 直接读取串口数据
-    ser = serial.Serial('/dev/ttyS0', 4800, timeout=1)
+    ser = serial.Serial('/dev/ttyS0', 9600, timeout=1)
     while True:
         line = ser.readline().decode('utf-8', errors='ignore')
         if line.startswith('$GPGGA'):
@@ -34,7 +34,7 @@ def get_google_map(lat, lon, api_key):
     return 'map.png'
 
 if __name__ == "__main__":
-    API_KEY = "YOUR_GOOGLE_MAPS_API_KEY"  # 替换为你的API密钥
+    API_KEY = "AIzaSyDLvUcraTLttRBcvn728IaGCe_prAZK24Q"  # 替换为你的API密钥
     
     try:
         print("等待GPS定位...")
