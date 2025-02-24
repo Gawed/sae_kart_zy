@@ -59,7 +59,7 @@ if __name__ == "__main__":
             print(f"Coordonnées obtenues avec succès ! LAT: {latitude}, LON: {longitude}")
             
             map_file = get_google_map(latitude, longitude, API_KEY)
-            print("map change！")
+            print("map change")
 
             img = Image.open(map_file)
             img.show()
