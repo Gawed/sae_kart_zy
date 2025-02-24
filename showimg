@@ -1,7 +1,27 @@
-import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
+import pygame
 
-# 读取并显示图像
-img = mpimg.imread('map.png')
-imgplot = plt.imshow(img)
-plt.show()
+# 初始化pygame
+pygame.init()
+
+# 创建一个窗口
+window = pygame.display.set_mode((800, 480))
+
+# 设置窗口标题
+pygame.display.set_caption("Pygame Example")
+
+# 加载并显示图像
+image = pygame.image.load("your_image.png")
+image = pygame.transform.scale(image, (800, 480))  # 调整图像大小
+window.blit(image, (0, 0))
+
+# 刷新屏幕
+pygame.display.flip()
+
+# 保持窗口打开
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+pygame.quit()  # 退出pygame
