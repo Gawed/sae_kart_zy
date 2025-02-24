@@ -50,22 +50,17 @@ def get_google_map(lat, lon, api_key):
 
 if __name__ == "__main__":
     API_KEY = "AIzaSyDLvUcraTLttRBcvn728IaGCe_prAZK24Q"  # API GOOGLE MAP
-    
+
     try:
         print("-------GPS---------")
-
+        
     	while True:
         	latitude, longitude = get_gps_coordinates()
         	print(f"Coordonnées obtenues avec succès !LAT: {latitude}, LON: {longitude}")
-
-        	
         	map_file = get_google_map(latitude, longitude, API_KEY)
         	print("map change！")
-
         	img = Image.open(map_file)
         	img.show()
-            
         	time.sleep(3)
-        
     except Exception as e:
         print(f"error: {str(e)}")
