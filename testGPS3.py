@@ -8,16 +8,16 @@ import paho.mqtt.client as mqtt
 
 broker = "192.168.1.88"
 port = 1883
-topic = "GPS"
+topic = "GPS/zoom"
 zoom_level = 15   
 
 def on_message(client, userdata, msg):
     global zoom_level
     try:
         message = msg.payload.decode("utf-8")
-        if message == "1":
+        if message == "zoom":
             zoom_level = min(zoom_level + 1, 20)  # grand
-        elif message == "0":
+        elif message == "dezoom":
             zoom_level = max(zoom_level - 1, 5)   # petit
         print(f"Received MQTT message: {message}, zoom level set to {zoom_level}")
     except Exception as e:
