@@ -86,5 +86,5 @@ def display_map():
     pygame.quit()
 
 if __name__ == "__main__":
-    API_KEY = "AIzaSyDLvUcraTLttRBcvn728IaGCe_prAZK24Q"  # 你的 Google Maps API Key
+    API_KEY = "AIzaSyDLvUcraTLttRBcvn728IaGCe_prAZK24Q"  #  Google Maps API Key
     display_map()
