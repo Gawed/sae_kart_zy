@@ -9,16 +9,16 @@ import paho.mqtt.client as mqtt
 broker = "192.168.1.88"
 port = 1883
 topic = "GPS"
-zoom_level = 15  # 初始缩放级别
+zoom_level = 15   
 
 def on_message(client, userdata, msg):
     global zoom_level
     try:
         message = msg.payload.decode("utf-8")
         if message == "1":
-            zoom_level = min(zoom_level + 1, 20)  # 放大
+            zoom_level = min(zoom_level + 1, 20)  # grand
         elif message == "0":
-            zoom_level = max(zoom_level - 1, 5)   # 缩小
+            zoom_level = max(zoom_level - 1, 5)   # petit
         print(f"Received MQTT message: {message}, zoom level set to {zoom_level}")
     except Exception as e:
         print(f"MQTT message processing error: {e}")
@@ -30,8 +30,8 @@ client.subscribe(topic)
 client.loop_start()
 
 def get_gps_coordinates():
-    """获取GPS坐标"""
-    ser = serial.Serial('/dev/ttyS0', 9600, timeout=1)
+    """GPS"""
+    ser = serial.Serial('/dev/serial0', 9600, timeout=1)
     while True:
         line = ser.readline().decode('utf-8', errors='ignore')
         if line.startswith('$GPGGA'):
@@ -41,7 +41,7 @@ def get_gps_coordinates():
         time.sleep(0.5)
 
 def parse_gpgga(data):
-    """解析GPGGA NMEA 数据"""
+    """GPGGA NMEA """
     parts = data.split(',')
     if len(parts) > 5:
         lat = convert_to_degrees(parts[2])  
@@ -66,7 +66,7 @@ def convert_to_degrees(raw_value):
         return None
 
 def get_google_map(lat, lon, api_key):
-    """获取 Google Maps 静态地图"""
+    """ Google Maps """
     global zoom_level
     url = f"https://maps.googleapis.com/maps/api/staticmap?center={lat},{lon}&zoom={zoom_level}&size=600x400&maptype=roadmap&markers=color:red%7C{lat},{lon}&key={api_key}"
     response = requests.get(url)
@@ -75,7 +75,7 @@ def get_google_map(lat, lon, api_key):
     return 'map.png'
 
 def display_map():
-    """显示GPS地图"""
+    """GPS"""
     pygame.init()
     
     screen = pygame.display.set_mode((600, 400))
@@ -88,7 +88,7 @@ def display_map():
             print(f"Coordonnées obtenues ! LAT: {latitude}, LON: {longitude}")
 
             map_file = get_google_map(latitude, longitude, API_KEY)
-            print("地图已更新")
+            print("new map")
 
             map_image = pygame.image.load(map_file)
             screen.blit(map_image, (0, 0)) 
@@ -103,7 +103,7 @@ def display_map():
                     running = False
         
         except Exception as e:
-            print(f"错误: {str(e)}")
+            print(f"error: {str(e)}")
             running = False
 
     pygame.quit()
