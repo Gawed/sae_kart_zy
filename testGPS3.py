@@ -6,7 +6,7 @@ import pygame
 import serial
 import paho.mqtt.client as mqtt
 
-broker = "192.168.1.88"
+broker = "192.168.1.205"
 port = 1883
 topic = "GPS/zoom"
 zoom_level = 15   
