@@ -5,17 +5,17 @@ import requests
 import pygame
 import serial
 import paho.mqtt.client as mqtt
-import math  # 用于计算箭头方向
+import math  
 
-# MQTT 配置
+# MQTT 
 broker = "192.168.1.205"
 port = 1883
 topic = "GPS/zoom"
 zoom_level = 15   
 
-# 解析 GPGGA 语句（获取纬度、经度）
+# GPGGA 
 def parse_gpgga(data):
-    """解析 GPGGA NMEA 语句，返回纬度和经度"""
+    """ GPGGA NMEA """
     parts = data.split(',')
     if len(parts) > 5:
         lat = convert_to_degrees(parts[2])  
@@ -29,22 +29,22 @@ def parse_gpgga(data):
             return lat, lon
     return None, None
 
-# 解析 GPVTG 语句（获取速度 & 方向）
+#  GPVTG
 def parse_gpvtg(data):
-    """解析 GPVTG NMEA 语句，返回速度（km/h）和方向（度）"""
+    """GPVTG NMEA"""
     parts = data.split(',')
     if len(parts) > 7:
         try:
-            speed_kmh = float(parts[7])  # 获取速度（单位：km/h）
-            direction = float(parts[1])  # 获取方向（单位：度）
+            speed_kmh = float(parts[7])  
+            direction = float(parts[1]) 
             return speed_kmh, direction
         except ValueError:
             return None, None
     return None, None
 
-# GPS 数据转换（NMEA 格式 → 十进制度）
+# GPS （NMEA）
 def convert_to_degrees(raw_value):
-    """转换 NMEA 坐标格式为十进制度"""
+    """NMEA"""
     if not raw_value:
         return None
     try:
@@ -54,9 +54,9 @@ def convert_to_degrees(raw_value):
     except ValueError:
         return None
 
-# 获取 GPS 数据（包括 位置、速度、方向）
+# GPS 
 def get_gps_data():
-    """获取 GPS 位置、速度和方向"""
+    """GPS"""
     ser = serial.Serial('/dev/serial0', 9600, timeout=1)
     lat, lon, speed, direction = None, None, None, None
     
@@ -73,9 +73,9 @@ def get_gps_data():
 
         time.sleep(0.5)
 
-# 获取 Google 静态地图
+# Google
 def get_google_map(lat, lon, api_key):
-    """从 Google Maps API 获取静态地图"""
+    """从 Google Maps API"""
     global zoom_level
     url = f"https://maps.googleapis.com/maps/api/staticmap?center={lat},{lon}&zoom={zoom_level}&size=600x400&maptype=roadmap&markers=color:red%7C{lat},{lon}&key={api_key}"
     response = requests.get(url)
@@ -83,52 +83,60 @@ def get_google_map(lat, lon, api_key):
         f.write(response.content)
     return 'map.png'
 
-# 处理 MQTT 消息
+# MQTT
 def on_message(client, userdata, msg):
-    """MQTT 处理消息（缩放地图）"""
+    """MQTT"""
     global zoom_level
     try:
         message = msg.payload.decode("utf-8")
         if message == "zoom":
-            zoom_level = min(zoom_level + 1, 20)  # 放大
+            zoom_level = min(zoom_level + 1, 20) 
         elif message == "dezoom":
-            zoom_level = max(zoom_level - 1, 5)   # 缩小
+            zoom_level = max(zoom_level - 1, 5) 
         print(f"Received MQTT message: {message}, zoom level set to {zoom_level}")
     except Exception as e:
         print(f"MQTT message processing error: {e}")
 
-# 初始化 MQTT 连接
+#  MQTT 
 client = mqtt.Client()
 client.on_message = on_message
 client.connect(broker, port, 60)
 client.subscribe(topic)
 client.loop_start()
 
-# 在地图上绘制方向箭头
+import math
+import pygame
+
 def draw_arrow(screen, direction):
-    """在屏幕中央绘制指示方向的箭头"""
     if direction is None:
         return  
+        
+    center_x, center_y = 300, 200 
+    arrow_length = 40
+    arrow_width = 10 
+ 
+    angle_rad = math.radians(direction)
+    end_x = center_x + arrow_length * math.sin(angle_rad)
+    end_y = center_y - arrow_length * math.cos(angle_rad)
 
-    center_x, center_y = 300, 200  # 箭头基准位置
-    arrow_length = 30  # 箭头长度
 
-    # 计算箭头端点坐标
-    angle_rad = math.radians(direction)  # 角度转弧度
-    end_x = center_x + arrow_length * math.sin(angle_rad)  # X 坐标（正北为 0°）
-    end_y = center_y - arrow_length * math.cos(angle_rad)  # Y 坐标（负号保证方向正确）
+    arrow_head_size = 10
+    left_x = end_x + arrow_head_size * math.sin(angle_rad + math.radians(150))
+    left_y = end_y - arrow_head_size * math.cos(angle_rad + math.radians(150))
+    right_x = end_x + arrow_head_size * math.sin(angle_rad - math.radians(150))
+    right_y = end_y - arrow_head_size * math.cos(angle_rad - math.radians(150))
 
-    # 绘制箭头
-    pygame.draw.line(screen, (255, 0, 0), (center_x, center_y), (end_x, end_y), 4)  # 画主线
-    pygame.draw.circle(screen, (255, 0, 0), (int(end_x), int(end_y)), 5)  # 画箭头端点
+    pygame.draw.line(screen, (255, 0, 0), (center_x, center_y), (end_x, end_y), 4)
 
-# 显示地图
+    pygame.draw.polygon(screen, (255, 0, 0), [(end_x, end_y), (left_x, left_y), (right_x, right_y)])
+
+
 def display_map():
-    """在 Pygame 窗口中显示 GPS 位置、速度和方向"""
+    """ Pygame """
     pygame.init()
     
     screen = pygame.display.set_mode((600, 400))
-    pygame.display.set_caption("GPS 追踪")
+    pygame.display.set_caption("GPS")
     font = pygame.font.Font(None, 24)
 
     running = True
