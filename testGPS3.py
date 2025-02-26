@@ -29,6 +29,10 @@ client.connect(broker, port, 60)
 client.subscribe(topic)
 client.loop_start()
 
+def publish_gps(lat, lon):
+    payload = json.dumps({"latitude": lat, "longitude": lon})
+    client.publish("gps/position", payload)
+
 def get_gps_coordinates():
     """GPS"""
     ser = serial.Serial('/dev/serial0', 9600, timeout=1)
@@ -86,7 +90,7 @@ def display_map():
         try:
             latitude, longitude = get_gps_coordinates()
             print(f"Coordonnées obtenues ! LAT: {latitude}, LON: {longitude}")
-
+            publish_gps(latitude, longitude)
             map_file = get_google_map(latitude, longitude, API_KEY)
             print("new map")
 
