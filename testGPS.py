@@ -1,7 +1,7 @@
 import serial
 
 def parse_gpgga(data):
-    """解析 GPGGA 语句，提取经纬度"""
+    """GPGGA """
     parts = data.split(',')
     if len(parts) > 5:
         lat = convert_to_degrees(parts[2])  # 纬度
@@ -16,12 +16,12 @@ def parse_gpgga(data):
     return None, None
 
 def parse_gpgll(data):
-    """解析 GPGLL 语句，提取经纬度"""
+    """ GPGLL """
     parts = data.split(',')
     if len(parts) > 5:
-        lat = convert_to_degrees(parts[1])  # 纬度
+        lat = convert_to_degrees(parts[1]) 
         lat_dir = parts[2]  # N/S
-        lon = convert_to_degrees(parts[3])  # 经度
+        lon = convert_to_degrees(parts[3])  
         lon_dir = parts[4]  # E/W
         
         if lat and lon:
@@ -31,7 +31,7 @@ def parse_gpgll(data):
     return None, None
 
 def convert_to_degrees(raw_value):
-    """将 NMEA 坐标转换为十进制度"""
+    """ NMEA """
     if not raw_value:
         return None
     try:
@@ -41,7 +41,7 @@ def convert_to_degrees(raw_value):
     except ValueError:
         return None
 
-# 打开 GPS 串口
+#  GPS 
 ser = serial.Serial('/dev/serial0', baudrate=4800, timeout=1)
 
 while True:
@@ -49,8 +49,8 @@ while True:
     if line.startswith("$GPGGA"):
         lat, lon = parse_gpgga(line)
         if lat and lon:
-            print(f"GPGGA 经纬度: {lat}, {lon}")
+            print(f"GPGGA : {lat}, {lon}")
     elif line.startswith("$GPGLL"):
         lat, lon = parse_gpgll(line)
         if lat and lon:
-            print(f"GPGLL 经纬度: {lat}, {lon}")
+            print(f"GPGLL : {lat}, {lon}")
