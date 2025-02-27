@@ -129,10 +129,9 @@ def display_map():
     pygame.display.set_caption("GPS Navigation")
 
     font = pygame.font.Font(None, 24)
-    clock = pygame.time.Clock()  # 控制帧率
+    clock = pygame.time.Clock()  # remplacer time/sleep(3)
     running = True
-
-    # 预定义按钮区域
+    
     zoom_in_button = pygame.Rect(100, 410, 100, 30)
     zoom_out_button = pygame.Rect(300, 410, 100, 30)
 
@@ -148,14 +147,11 @@ def display_map():
             map_file = get_google_map(latitude, longitude, route)
             map_image = pygame.image.load(map_file)
 
-            # **界面更新**
             screen.fill((255, 255, 255))
             screen.blit(map_image, (0, 0))
 
-            # 右侧信息栏背景
             pygame.draw.rect(screen, (200, 200, 200), (600, 0, 200, 450))
-
-            # 设定文本信息
+            
             info_lines = [
                 "Destination:",
                 destination_address if destination_address else "None",
@@ -176,14 +172,12 @@ def display_map():
             info_lines.append("")
             info_lines.append(f"Zoom Level: {zoom_level}")
 
-            # 绘制文本
             y_offset = 20
             for line in info_lines:
                 text_surface = font.render(line, True, (0, 0, 0))
                 screen.blit(text_surface, (610, y_offset))
                 y_offset += 30
-
-            # 绘制按钮
+                
             pygame.draw.rect(screen, (0, 128, 255), zoom_in_button)
             pygame.draw.rect(screen, (255, 128, 0), zoom_out_button)
 
@@ -192,9 +186,8 @@ def display_map():
             screen.blit(zoom_in_text, (zoom_in_button.x + 25, zoom_in_button.y + 5))
             screen.blit(zoom_out_text, (zoom_out_button.x + 25, zoom_out_button.y + 5))
 
-            pygame.display.flip()  # **立即刷新界面**
-
-            # **事件监听**
+            pygame.display.flip()  
+            
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
@@ -209,7 +202,7 @@ def display_map():
                         zoom_level = max(zoom_level - 1, 5)
                         client.publish("GPS/zoom", "dezoom")
 
-            clock.tick(1)  # **每秒刷新 1 次**
+            clock.tick(1) 
 
         except Exception as e:
             print(f"Error: {str(e)}")
