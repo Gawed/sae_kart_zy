@@ -160,11 +160,11 @@ def display_map():
                 "Destination:",
                 destination_address if destination_address else "None",
                 "",
-                "Current Position:",
+                "Cordonnee actuelle:",
                 f"LAT: {latitude:.6f}",
                 f"LON: {longitude:.6f}",
                 "",
-                "Target Position:",
+                "Cordonnee destination:",
             ]
 
             if destination_coords:
