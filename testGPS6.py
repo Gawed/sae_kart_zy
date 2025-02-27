@@ -124,10 +124,10 @@ def get_google_map(lat, lon, route=None):
 
 def display_map():
     pygame.init()
-    screen = pygame.display.set_mode((800, 400))  # 扩展窗口宽度以显示文本信息
+    screen = pygame.display.set_mode((800, 400))  
     pygame.display.set_caption("GPS Navigation")
 
-    font = pygame.font.Font(None, 24)  # 设定字体大小
+    font = pygame.font.Font(None, 24)  
     running = True
 
     while running:
@@ -155,11 +155,11 @@ def display_map():
                 "Destination:",
                 destination_address if destination_address else "None",
                 "",
-                "Current Position:",  
+                "Coordonnées de l'adresse actuelle:",  
                 f"LAT: {latitude:.6f}",
                 f"LON: {longitude:.6f}",
                 "",
-                "Target Position:", 
+                "Coordonnées de l'adresse destination:", 
             ]
 
             if destination_coords:
