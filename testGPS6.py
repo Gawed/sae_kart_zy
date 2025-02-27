@@ -125,10 +125,11 @@ def get_google_map(lat, lon, route=None):
 def display_map():
     global zoom_level
     pygame.init()
-    screen = pygame.display.set_mode((800, 450))  # 增加高度以容纳按钮
+    screen = pygame.display.set_mode((800, 450))  
     pygame.display.set_caption("GPS Navigation")
 
     font = pygame.font.Font(None, 24)
+    clock = pygame.time.Clock()  # 控制帧率
     running = True
 
     # 预定义按钮区域
@@ -138,7 +139,6 @@ def display_map():
     while running:
         try:
             latitude, longitude = get_gps_coordinates()
-            print(f"GPS Location: LAT: {latitude}, LON: {longitude}")
             publish_gps(latitude, longitude)
 
             route = None
@@ -146,9 +146,9 @@ def display_map():
                 route = get_route(latitude, longitude, *destination_coords)
 
             map_file = get_google_map(latitude, longitude, route)
-            print("Updated map with navigation route")
-
             map_image = pygame.image.load(map_file)
+
+            # **界面更新**
             screen.fill((255, 255, 255))
             screen.blit(map_image, (0, 0))
 
@@ -157,14 +157,14 @@ def display_map():
 
             # 设定文本信息
             info_lines = [
-                "Address Destination:",
+                "Destination:",
                 destination_address if destination_address else "None",
                 "",
-                "Coordonnées actuelle:",
+                "Current Position:",
                 f"LAT: {latitude:.6f}",
                 f"LON: {longitude:.6f}",
                 "",
-                "Coordonnées destination:",
+                "Target Position:",
             ]
 
             if destination_coords:
@@ -173,7 +173,6 @@ def display_map():
             else:
                 info_lines.append("N/A")
 
-            # 显示缩放级别
             info_lines.append("")
             info_lines.append(f"Zoom Level: {zoom_level}")
 
@@ -185,18 +184,17 @@ def display_map():
                 y_offset += 30
 
             # 绘制按钮
-            pygame.draw.rect(screen, (0, 128, 255), zoom_in_button)  # 蓝色按钮
-            pygame.draw.rect(screen, (255, 128, 0), zoom_out_button)  # 橙色按钮
+            pygame.draw.rect(screen, (0, 128, 255), zoom_in_button)
+            pygame.draw.rect(screen, (255, 128, 0), zoom_out_button)
 
             zoom_in_text = font.render("Zoom +", True, (255, 255, 255))
             zoom_out_text = font.render("Zoom -", True, (255, 255, 255))
             screen.blit(zoom_in_text, (zoom_in_button.x + 25, zoom_in_button.y + 5))
             screen.blit(zoom_out_text, (zoom_out_button.x + 25, zoom_out_button.y + 5))
 
-            pygame.display.flip()
-            time.sleep(3)
+            pygame.display.flip()  # **立即刷新界面**
 
-            # 事件处理
+            # **事件监听**
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
@@ -206,12 +204,12 @@ def display_map():
                     x, y = event.pos
                     if zoom_in_button.collidepoint(x, y):
                         zoom_level = min(zoom_level + 1, 20)
-                        print(f"Zoom In: {zoom_level}")
-                        client.publish("GPS/zoom", "zoom")  # 发送 MQTT 消息
+                        client.publish("GPS/zoom", "zoom")
                     elif zoom_out_button.collidepoint(x, y):
                         zoom_level = max(zoom_level - 1, 5)
-                        print(f"Zoom Out: {zoom_level}")
-                        client.publish("GPS/zoom", "dezoom")  # 发送 MQTT 消息
+                        client.publish("GPS/zoom", "dezoom")
+
+            clock.tick(1)  # **每秒刷新 1 次**
 
         except Exception as e:
             print(f"Error: {str(e)}")
