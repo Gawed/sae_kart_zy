@@ -124,10 +124,12 @@ def get_google_map(lat, lon, route=None):
 
 def display_map():
     pygame.init()
-    screen = pygame.display.set_mode((600, 400))
+    screen = pygame.display.set_mode((800, 400)) 
     pygame.display.set_caption("GPS Navigation")
 
+    font = pygame.font.Font(None, 24)
     running = True
+
     while running:
         try:
             latitude, longitude = get_gps_coordinates()
@@ -142,11 +144,18 @@ def display_map():
             print("Updated map with navigation route")
 
             map_image = pygame.image.load(map_file)
-            screen.blit(map_image, (0, 0))
-            pygame.display.flip()
+            screen.fill((255, 255, 255))  
+            screen.blit(map_image, (0, 0))  
+        
+            pygame.draw.rect(screen, (200, 200, 200), (600, 0, 200, 400))  
 
+            destination_text = f"Destination:\n{destination_address if destination_address else 'None'}"
+            text_surface = font.render(destination_text, True, (0, 0, 0))  
+            screen.blit(text_surface, (610, 20)) 
+
+            pygame.display.flip()
             time.sleep(3)
-            
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
@@ -158,6 +167,7 @@ def display_map():
             running = False
 
     pygame.quit()
+
 
 if __name__ == "__main__":
     input_thread = threading.Thread(target=input_address, daemon=True)
