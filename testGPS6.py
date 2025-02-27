@@ -149,7 +149,7 @@ def display_map():
         
             pygame.draw.rect(screen, (200, 200, 200), (600, 0, 200, 400))  
 
-            destination_text = f"Destination:\n{destination_address if destination_address else 'None'}"
+            destination_text = f"Destination:{destination_address if destination_address else 'None'}"
             text_surface = font.render(destination_text, True, (0, 0, 0))  
             screen.blit(text_surface, (610, 20)) 
 
