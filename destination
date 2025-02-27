@@ -1,0 +1,11 @@
+import paho.mqtt.client as mqtt
+
+BROKER = "192.168.1.205"
+TOPIC = "GPS/destination"
+
+client = mqtt.Client()
+client.connect(BROKER, 1883, 60)
+
+address = input("destination: ")
+client.publish(TOPIC, address)
+print("sent")
