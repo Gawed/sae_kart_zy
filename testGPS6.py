@@ -152,14 +152,14 @@ def display_map():
 
   
             info_lines = [
-                "Destination:",
+                "Address destination:",
                 destination_address if destination_address else "None",
                 "",
-                "Coordonnées de l'adresse actuelle:",  
+                "Coordonnées actuelle:",  
                 f"LAT: {latitude:.6f}",
                 f"LON: {longitude:.6f}",
                 "",
-                "Coordonnées de l'adresse destination:", 
+                "Coordonnées destination:", 
             ]
 
             if destination_coords:
