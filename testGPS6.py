@@ -124,7 +124,7 @@ def get_google_map(lat, lon, route=None):
 
 def display_map():
     pygame.init()
-    screen = pygame.display.set_mode((800, 400))  # 扩展窗口以显示文本信息
+    screen = pygame.display.set_mode((800, 400))  # 扩展窗口宽度以显示文本信息
     pygame.display.set_caption("GPS Navigation")
 
     font = pygame.font.Font(None, 24)  # 设定字体大小
@@ -145,28 +145,34 @@ def display_map():
 
             map_image = pygame.image.load(map_file)
             screen.fill((255, 255, 255))  
-            screen.blit(map_image, (0, 0)) 
+            screen.blit(map_image, (0, 0))  
 
+     
             pygame.draw.rect(screen, (200, 200, 200), (600, 0, 200, 400))  
 
-            destination_text = f"Destination:\n{destination_address if destination_address else 'None'}"
-            current_coords_text = f"Current:\nLAT: {latitude:.6f}\nLON: {longitude:.6f}"
-            target_coords_text = "Target:\n"
-            if destination_coords:
-                target_coords_text += f"LAT: {destination_coords[0]:.6f}\nLON: {destination_coords[1]:.6f}"
-            else:
-                target_coords_text += "N/A"
-
-            text_surfaces = [
-                font.render(destination_text, True, (0, 0, 0)),
-                font.render(current_coords_text, True, (0, 0, 0)),
-                font.render(target_coords_text, True, (0, 0, 0)),
+  
+            info_lines = [
+                "Destination:",
+                destination_address if destination_address else "None",
+                "",
+                "Current Position:",  
+                f"LAT: {latitude:.6f}",
+                f"LON: {longitude:.6f}",
+                "",
+                "Target Position:", 
             ]
 
+            if destination_coords:
+                info_lines.append(f"LAT: {destination_coords[0]:.6f}")
+                info_lines.append(f"LON: {destination_coords[1]:.6f}")
+            else:
+                info_lines.append("N/A")
+
             y_offset = 20
-            for text_surface in text_surfaces:
+            for line in info_lines:
+                text_surface = font.render(line, True, (0, 0, 0)) 
                 screen.blit(text_surface, (610, y_offset))
-                y_offset += 80  
+                y_offset += 30  
 
             pygame.display.flip()
             time.sleep(3)
