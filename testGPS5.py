@@ -44,7 +44,7 @@ def publish_gps(lat, lon):
     client.publish("gps/position", payload)
 
 def get_gps_coordinates():
-    ser = serial.Serial('/dev/serial0', 9600, timeout=1)
+    ser = serial.Serial('/dev/ttyAMA1', 9600, timeout=1)
     while True:
         line = ser.readline().decode('utf-8', errors='ignore')
         if line.startswith('$GPGGA'):
