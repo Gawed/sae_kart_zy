@@ -4,9 +4,9 @@ def parse_gpgga(data):
     """GPGGA """
     parts = data.split(',')
     if len(parts) > 5:
-        lat = convert_to_degrees(parts[2])  # 纬度
+        lat = convert_to_degrees(parts[2])  
         lat_dir = parts[3]  # N/S
-        lon = convert_to_degrees(parts[4])  # 经度
+        lon = convert_to_degrees(parts[4])  
         lon_dir = parts[5]  # E/W
         
         if lat and lon:
