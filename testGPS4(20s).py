@@ -154,8 +154,8 @@ def display_map():
             screen.blit(map_image, (0, 0)) 
 
             # 显示速度 & 方向
-            speed_text = font.render(f"速度: {speed:.2f} km/h", True, (255, 255, 255))
-            direction_text = font.render(f"方向: {direction:.2f}°", True, (255, 255, 255))
+            speed_text = font.render(f"vitesse: {speed:.2f} km/h", True, (255, 255, 255))
+            direction_text = font.render(f"direction: {direction:.2f}°", True, (255, 255, 255))
 
             screen.blit(speed_text, (10, 10))  
             screen.blit(direction_text, (10, 40))  
